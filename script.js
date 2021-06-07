@@ -194,6 +194,7 @@ function myTimer() {
         popupImg.src = "";
         close.classList.add("hide");
         caption.style.paddingTop = "150px";
+        caption.style.textAlign = "center";
         caption.innerHTML = "Congrats " + userName + "! You won! <br> Move Count: " + count + "<br> Time taken: " + (Math.floor(timetaken / 1000) + " seconds");
         newgame.style.zIndex = "1";
         }, 100)
