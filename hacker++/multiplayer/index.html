@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Tiles</title>
+    <link rel="stylesheet" href="../multiplayer/style.css">
+</head>
+
+<body>
+    <audio id="tap" src="../assets/audio/tap.wav"></audio>
+    <audio id="finish" src="../assets/audio/finish.mp3"></audio>
+    <div id="popup">
+        <div id="close">X</div>
+        <figure>
+            <img id="gif">
+            <figcaption id="caption"></figcaption>
+        </figure>
+    </div>
+    <div id="top-container">
+        <div>
+            <div id="darkAndDemo">
+                <div id="darkModeDiv"><button id="darkMode">Dark Mode</button></div>
+                <div id="demoDiv"><button id="demo">Click for Instructions - Demo</button></div>
+            </div>
+
+            <div>
+                <div id="difficultyDiv">
+                    <label for="difficulty">Choose a Difficulty Level:</label>
+                    <select name="difficulty" id="difficulty">
+                        <!-- <option value="none" selected disabled hidden>Select an option</option> -->
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Difficult</option>
+                    </select>
+                </div>
+
+                <div id="newgameDiv">
+                    <button id="newgame">New Game</button>
+                    <img src="../assets/images/mute.png" id="mute" class="hide">
+                    <img src="../assets/images/unmute.png" id="unmute">
+                </div>
+            </div>
+
+            <div id="highscoreDiv">
+                <table id="highscore">
+                    <tr>
+                        <td style="color: rgb(238, 55, 70); border: none;"><strong>Highscore</strong></td>
+                        <td>Player's Name</td>
+                        <td>Move Count</td>
+                        <td>Time Taken</td>
+                    </tr>
+                    <tr>
+                        <td style="color: rgb(238, 55, 70); border: none;"><strong><span>Mode Selected</span></strong>
+                        </td>
+                        <td><span id="highName">N/A</span></td>
+                        <td><span id="highCount">-</span></td>
+                        <td><span id="highTIme">-</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id=middle-container>
+
+        <div id="player1" class="game">
+
+            <div id="p1nameDiv">
+                <label for="p1yourName">Player 1 Name: </label>
+                <input type="text" id="p1yourName">
+                <div id="p1startDiv"><button id="p1start">Start</button></div>
+            </div>
+            <hr>
+            <div id="p1scores">
+                <div id=p1countDiv><span id="p1moveCounter">Move Count - 0</span></div>
+                <div id=p1timerDiv><span id="p1timer">Timer - 00:00:000</span></div>
+            </div>
+
+            <hr>
+
+            <div id="p1table-container">
+                <span id="p1won" class="wonMessage"></span>
+            </div>
+
+        </div>
+
+        <div id="player2" class="game">
+
+            <div id="p2nameDiv">
+                <label for="p2yourName">Player 2 Name: </label>
+                <input type="text" id="p2yourName">
+                <div id="p2startDiv"><button id="p2start">Start</button></div>
+            </div>
+            <hr>
+            <div id="p2scores">
+                <div id=p2countDiv><span id="p2moveCounter">Move Count - 0</span></div>
+                <div id=p2timerDiv><span id="p2timer">Timer - 00:00:000</span></div>
+            </div>
+
+            <hr>
+
+            <div id="p2table-container">
+                <div id="p2won" class="wonMsg">Wait for Player 1 to finish</div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <script src="../multiplayer/script.js"></script>
+</body>
+
+</html>
