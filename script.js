@@ -1,139 +1,197 @@
-var t5_colorArray = ['#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb'];
-var t3_colorArray = ['#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb']
+//declaring color arrays
+var t3e_colorArray;
+var t5e_colorArray;
+var t4m_colorArray;
+var t6m_colorArray;
+var t5h_colorArray;
+var t7h_colorArray;
+var colorArraays = [];
 
-var t3_randomArray = []
-var t5_solveArray = []
+let n; //n is the bigger grid size in each mode n=5 for easy, n=6 for medium, n=7 for hard
+let d; //d is difficulty level for each mode d=1 for easy, d=3 for medium, d=5 for hard
 
+function colorArrayFunction() {
+    //easy mode 3x3 and 5x5 grid with total 6 different colors
+    t3e_colorArray = ['#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb'];
+    t5e_colorArray = ['#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb'];
+
+    //medium mode 4x4 and 6x6 grid with total 7 different colors
+    t4m_colorArray = ['#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00'];
+    t6m_colorArray = ['#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00'];
+
+    //hard mode 5x5 and 7x7 grid with total 8 different colors
+    t5h_colorArray = ['#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7'];
+    t7h_colorArray = ['#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7', '#ae3c60', '#df473c', '#f3c33c', '#255e79', '#267778', '#82b4bb', '#bfff00', '#5e34c7'];
+
+    colorArrays = [
+        "", "", "", "", t3e_colorArray, "", t5e_colorArray, t4m_colorArray, "", t6m_colorArray, t5h_colorArray, "", t7h_colorArray
+    ]
+}
+colorArrayFunction();
+
+var newgame = document.getElementById("newgame");
 var start = document.getElementById("start");
 var input = document.getElementById("yourName");
-var newgame = document.getElementById("newgame");
-var pause = document.getElementById("pause");
+var difficulty = document.getElementById("difficulty")
+var difficultyLevel = document.getElementById("difficulty").value;
+var countdownTimer = document.querySelector("#timer")
 
-var count = 0;
-var startTime;
-var x;
-var timetaken;
+//sounds
+var tapSound = document.getElementById("tap");
+var finishSound = document.getElementById("finish");
 
-//3*3 grid
-var table3 = document.getElementById("table3")
-var t3_rowLength = 3;
-var t3_columnLenghth = 3;
-
-//creating table rows
-for (let i = 0; i < t3_rowLength; i++) {
-    let t3_row = document.createElement("tr");
-    t3_row.id = "t3_row" + (i + 1);
-
-    table3.appendChild(t3_row);
-
-    //creating table data
-    for (let j = 0; j < t3_columnLenghth; j++) {
-        let t3_cell = document.createElement("td");
-        // let cellText3 = document.createTextNode(i * t3_rowLength + j + 1);
-        t3_random = Math.floor(Math.random() * t3_colorArray.length)
-        let color = t3_colorArray[t3_random];
-        t3_colorArray.splice(t3_random, 1);
-        t3_cell.style.backgroundColor = color;
-        t3_cell.id = ("t3_tile" + (i * t3_rowLength + j + 1));
-        t3_cell.classList.add("tile");
-        // t3_cell.appendChild(cellText3);
-        t3_row.appendChild(t3_cell);
-    }
-}
-//pushing randomised generated colors to t3_randomArray
-for (let i = 1; i < 10; i++) {
-    t3_randomArray.push(document.getElementById("t3_tile" + i).style.backgroundColor)
-}
-
-//5*5 grid
-var table5 = document.getElementById("table5")
-var t5_rowLength = 5;
-var t5_columnLength = 5;
-
-//creating table rows
-for (let i = 0; i < t5_rowLength; i++) {
-    let t5_row = document.createElement("tr");
-    t5_row.id = "t5_row" + (i + 1);
-
-    table5.appendChild(t5_row);
-
-    //creating table data
-    for (let j = 0; j < t5_columnLength; j++) {
-        let t5_cell = document.createElement("td");
-        // let cellText = document.createTextNode(i * t5_rowLength + j + 1);
-        t5_random = Math.floor(Math.random() * t5_colorArray.length)
-        let color = t5_colorArray[t5_random];
-        t5_colorArray.splice(t5_random, 1);
-        t5_cell.style.backgroundColor = color;
-        t5_cell.id = ("t5_tile" + (i * t5_rowLength + j + 1));
-        t5_cell.classList.add("tile");
-        // t5_cell.appendChild(cellText);
-        t5_row.appendChild(t5_cell);
-    }
-}
-
-function tileSwap() {
-    //declaring black empty tiles
-    var emptyRow = 5;
-    var emptyColumn = 5;
-    var row;
-    var column;
-
-    //adding event listerner to all tiles of 5x5 grid
-    for (let index = 1; index < 26; index++) {
-        document.querySelector('#t5_tile' + index).addEventListener('click', () => {
-            //finding row and column number where the mouse is clicked
-            row = Math.ceil(index / 5);
-            if (index <= 5) {
-                column = index;
-            } else {
-                column = 5 - ((row * 5) % (index));
-            }
-
-            //adding condition that only adjacent tiles should be swapped
-            if ((emptyColumn == column && Math.abs(emptyRow - row) == 1) || (emptyRow == row && Math.abs(emptyColumn - column) == 1)) {
-                count++;
-                document.getElementById("moveCounter").innerHTML = "Move Count - " + count;
-
-                //finding index number of empty tile and declaring it equal to emptyIndex
-                var emptyIndex = ((emptyRow - 1) * 5 + (emptyColumn - 1) + 1);
-
-                //swapping the empty tile and adjacent tile
-                // [document.getElementById("t5_tile" + index).innerHTML, document.getElementById("t5_tile" + emptyIndex).innerHTML] = [document.getElementById("t5_tile" + emptyIndex).innerHTML, document.getElementById("t5_tile" + index).innerHTML];
-                [document.getElementById("t5_tile" + index).style.backgroundColor, document.getElementById("t5_tile" + emptyIndex).style.backgroundColor] = [document.getElementById("t5_tile" + emptyIndex).style.backgroundColor, document.getElementById("t5_tile" + index).style.backgroundColor]
-
-                //declaring new row and coloumn to emptyTile after swapping
-                emptyRow = row
-                emptyColumn = column
-            }
-
-            //pushing colors of center of 5x5 grid to t5_solveArray
-            t5_solveArray = []
-            for (let i = 7; i < 10; i++) {
-                t5_solveArray.push(document.getElementById("t5_tile" + i).style.backgroundColor)
-            }
-            for (let j = 12; j < 15; j++) {
-                t5_solveArray.push(document.getElementById("t5_tile" + j).style.backgroundColor)
-            }
-            for (let k = 17; k < 20; k++) {
-                t5_solveArray.push(document.getElementById("t5_tile" + k).style.backgroundColor)
-            }
-        })
-    }
-}
+//highscores variable
+var highCount = document.getElementById("highCount");
+var highTime = document.getElementById("highTime");
+var highName = document.getElementById("highName");
+var modeSelected = document.getElementById("modeSelected");
 
 //pop up window
 var popup = document.getElementById("popup");
 var demo = document.getElementById("demo");
 var popupImg = document.getElementById("gif");
 var caption = document.getElementById("caption");
+var close = document.getElementById("close");
+
+var count = 0;
+var startTime;
+var x; // for time interval
+var timetaken;
+var smallGrid_randomArray = [];
+var bigGrid_centreArray = [];
+
+//setting local storage initially
+if (localStorage.getItem("bestScores_easy") === null) {
+    localStorage.setItem("bestScores_easy", JSON.stringify([
+        {
+            "hscore": 0,
+            "hplayerName": "N/A",
+            "hmoveCount": "-",
+            "htimeTaken": "-"
+        }
+    ]));
+}
+if (localStorage.getItem("bestScores_medium") === null) {
+    localStorage.setItem("bestScores_medium", JSON.stringify([
+        {
+            "hscore": 0,
+            "hplayerName": "N/A",
+            "hmoveCount": "-",
+            "htimeTaken": "-"
+        }
+    ]));
+}
+if (localStorage.getItem("bestScores_hard") === null) {
+    localStorage.setItem("bestScores_hard", JSON.stringify([
+        {
+            "hscore": 0,
+            "hplayerName": "N/A",
+            "hmoveCount": "-",
+            "htimeTaken": "-"
+        }
+    ]));
+}
+
+// n*n grid
+function grid(n, d) {
+    var tableContainer = document.getElementById("table-container");
+    let div = document.createElement("div");
+    div.id = "table" + n + "Div";
+    tableContainer.appendChild(div)
+    let table = document.createElement("table");
+    table.id = "table" + n;
+    table.classList = "table"
+
+    div.appendChild(table);
+    var rowLength = n;
+    var columnLength = n;
+
+    //creating table rows
+    for (let i = 0; i < rowLength; i++) {
+        let row = document.createElement("tr");
+        row.id = "t" + n + "row" + (i + 1);
+
+        table.appendChild(row);
+
+        //creating table data
+        for (let j = 0; j < columnLength; j++) {
+            let cell = document.createElement("td");
+            // let cellText = document.createTextNode(i * rowLength + j + 1);
+            // let cellText = document.createTextNode((i + 1) + "" + (j + 1));
+            let random = Math.floor(Math.random() * colorArrays[(n + d)].length)
+            // console.log(random);
+            let color = colorArrays[(n + d)][random];
+            colorArrays[(n + d)].splice(random, 1);
+            cell.style.backgroundColor = color;
+            // cell.id = ("t" + n + "_tile" + (i * rowLength + j + 1));
+            cell.id = ("t" + n + "_tile" + (i + 1) + "" + (j + 1));
+            cell.classList.add("tile");
+            // cell.appendChild(cellText);
+            row.appendChild(cell);
+        }
+    }
+}
+
+//On the page load, it will start with Easy Mode
+n = 5;
+d = 1;
+grid((n - 2), d); //4
+grid(n, d); //6
+
+function tileSwap() {
+
+    //pushing colors of 3x3 grid to smallGrid_randomArray
+    smallGrid_randomArray = []
+    for (let i = 1; i < (n - 2) + 1; i++) {
+        for (let j = 1; j < (n - 2) + 1; j++) {
+            smallGrid_randomArray.push(document.getElementById("t" + (n - 2) + "_tile" + i + "" + j).style.backgroundColor)
+        }
+    }
+
+    //declaring black empty tiles
+    var emptyRow = n;
+    var emptyColumn = n;
+
+    //adding event listerner to all tiles of big grid
+    for (let row = 1; row < (n + 1); row++) {
+        for (let column = 1; column < (n + 1); column++) {
+            document.getElementById('t' + n + '_tile' + row + "" + column).addEventListener('click', () => {
+                if ((emptyColumn == column && Math.abs(emptyRow - row) == 1) || (emptyRow == row && Math.abs(emptyColumn - column) == 1)) {
+                    count++;
+                    tapSound.play();
+                    document.getElementById("moveCounter").innerHTML = "Move Count - " + count;
+
+                    //swapping the empty tile and adjacent tile
+                    [document.getElementById("t" + n + "_tile" + row + "" + column).innerHTML, document.getElementById("t" + n + "_tile" + emptyRow + "" + emptyColumn).innerHTML] = [document.getElementById("t" + n + "_tile" + emptyRow + "" + emptyColumn).innerHTML, document.getElementById("t" + n + "_tile" + row + "" + column).innerHTML];
+                    [document.getElementById("t" + n + "_tile" + row + "" + column).style.backgroundColor, document.getElementById("t" + n + "_tile" + emptyRow + "" + emptyColumn).style.backgroundColor] = [document.getElementById("t" + n + "_tile" + emptyRow + "" + emptyColumn).style.backgroundColor, document.getElementById("t" + n + "_tile" + row + "" + column).style.backgroundColor]
+
+                    //declaring new row and coloumn to emptyTile after swapping
+                    emptyRow = row
+                    emptyColumn = column
+                }
+
+                //pushing colors of center of 5x5 grid to bigGrid_centreArray
+                bigGrid_centreArray = []
+                for (let i = 2; i < n; i++) {
+                    for (let j = 2; j < n; j++) {
+                        bigGrid_centreArray.push(document.getElementById("t" + n + "_tile" + i + "" + j).style.backgroundColor)
+                    }
+                }
+            })
+        }
+    }
+}
+
+//pop up window
 demo.onclick = function () {
     popup.style.display = "block";
     popupImg.src = "demo.gif";
-    caption.innerHTML = "Given a 5x5 grid made with tiles of 6 different colors, the goal is to try and make this 3x3 grid in its center. Out of the 25 tiles, one will be empty which can be swapped with any of the four adjacent tiles.";
+    newgame.style.zIndex = "0"
+    close.classList.remove("hide");
+    caption.style.paddingTop = "0px";
+    caption.innerHTML = "For Easy Mode: Given a 5x5 grid made with tiles of 6 different colors, the goal is to try and make this 3x3 grid in its center. Out of the 25 tiles, one will be empty which can be swapped with any of the four adjacent tiles. <br> P.S. High Scores are based on move count alone.";
 }
 
-var close = document.getElementById("close");
 close.addEventListener('click', () => {
     popup.style.display = "none";
 })
@@ -151,14 +209,81 @@ start.addEventListener('click', () => {
     input.disabled = true;
     start.disabled = true;
 
+    //adding black border to center of 5x5 grid on clicking start button to highlight it
+    for (let i = 2; i < n; i++) {
+        for (let j = 2; j < n; j++) {
+            document.getElementById("t" + n + "_tile" + i + "" + j).style.border = "2px solid rgb(19, 18, 18)"
+        }
+    }
+
     //calling the function so the tiles can be swapped only after clicking start button
     tileSwap();
 })
 
+//adding event listener to select option to switch between easy medium hard
+difficulty.addEventListener('change', () => {
+    gameStopInBetween();
+    //make the new table with some different generated color
+    difficultyLevel = document.getElementById("difficulty").value;
+    if (difficultyLevel === "easy") {
+        n = 5;
+        d = 1;
+        grid((n - 2), d); //4
+        grid(n, d); //6
+    }
+    if (difficultyLevel === "medium") {
+        n = 6;
+        d = 3;
+        grid((n - 2), d); //7
+        grid(n, d); //9
+    }
+    if (difficultyLevel === "hard") {
+        n = 7;
+        d = 5;
+        grid((n - 2), d); //10
+        grid(n, d); //12
+    }
+    //updating high score for the selected option
+    updateHighScore();
+    colorArrayFunction();
+})
+
 //adding event listeners to newGame button
 newgame.addEventListener('click', () => {
-    location.reload();
+    gameStopInBetween();
+    //make the new table with some different generated colors
+    grid((n - 2), d);
+    grid(n, d);
+    colorArrayFunction();
 })
+
+function gameStopInBetween() {
+    //closing popup if new game button is clicked after won
+    popup.style.display = "none";
+
+    //making all the color arrays filled again
+    colorArrayFunction();
+
+    //making the start button and input enable again
+    start.disabled = false;
+    input.disabled = false;
+
+    //stoping the timer
+    clearInterval(x);
+
+    //display the time to 0 again
+    document.getElementById("timer").innerHTML = "Timer - 00:00:000"
+
+    //display the move count 0 again
+    count = 0;
+    document.getElementById("moveCounter").innerHTML = "Move Count - " + count;
+
+    //removing the already formed tables
+    document.getElementById("table" + n).remove();
+    document.getElementById("table" + (n - 2)).remove();
+    document.getElementById("table" + (n - 2) + "Div").remove();
+    document.getElementById("table" + n + "Div").remove();
+}
 
 //Timer
 function myTimer() {
@@ -185,18 +310,128 @@ function myTimer() {
     // console.log(timetaken)
     document.getElementById("timer").innerHTML = "Timer - " + minute + ":" + seconds + ":" + mSeconds;
 
-    // if both the 3x3 grid and center grid of 5x5 matches, declare win
-    if (t3_randomArray.join() == t5_solveArray.join()) {
+    // if both the small grid and center grid of big grid matches, declare win
+    if (smallGrid_randomArray.join() == bigGrid_centreArray.join()) {
+        //score is only factor to decide the highscore and it is based on move count, less the move count - more the score - good highscore
+        score = 1 / (count)
+
+        if (difficultyLevel === "easy") {
+            if (hscore_easy[0].hscore < score) {
+                localStorage.setItem("bestScores_easy", JSON.stringify([
+                    {
+                        "hscore": score,
+                        "hplayerName": userName,
+                        "hmoveCount": count,
+                        "htimeTaken": Math.floor(timetaken / 1000)
+                    }
+                ]));
+            }
+        }
+        if (difficultyLevel === "medium") {
+            if (hscore_medium[0].hscore < score) {
+                localStorage.setItem("bestScores_medium", JSON.stringify([
+                    {
+                        "hscore": score,
+                        "hplayerName": userName,
+                        "hmoveCount": count,
+                        "htimeTaken": Math.floor(timetaken / 1000)
+                    }
+                ]));
+            }
+        }
+        if (difficultyLevel === "hard") {
+            if (hscore_hard[0].hscore < score) {
+                localStorage.setItem("bestScores_easy", JSON.stringify([
+                    {
+                        "hscore": score,
+                        "hplayerName": userName,
+                        "hmoveCount": count,
+                        "htimeTaken": Math.floor(timetaken / 1000)
+                    }
+                ]));
+            }
+        }
+        updateHighScore();
+
         setTimeout(() => {
-        console.log("won");
-        clearInterval(x);
-        popup.style.display = "block";
-        popupImg.src = "";
-        close.classList.add("hide");
-        caption.style.paddingTop = "150px";
-        caption.style.textAlign = "center";
-        caption.innerHTML = "Congrats " + userName + "! You won! <br> Move Count: " + count + "<br> Time taken: " + (Math.floor(timetaken / 1000) + " seconds");
-        newgame.style.zIndex = "1";
+            finishSound.play();
+            // console.log("won");
+            clearInterval(x);
+            popup.style.display = "block";
+            popupImg.src = "";
+            close.classList.add("hide");
+            caption.style.paddingTop = "150px";
+            caption.style.textAlign = "center";
+            caption.innerHTML = "Congrats " + userName + "! You won! <br> Move Count: " + count + "<br> Time taken: " + (Math.floor(timetaken / 1000) + " seconds");
+            newgame.style.zIndex = "1";
         }, 100)
     }
 }
+
+//local storage
+var hscore_easy = JSON.parse(localStorage.getItem("bestScores_easy"))
+var hscore_medium = JSON.parse(localStorage.getItem("bestScores_medium"))
+var hscore_hard = JSON.parse(localStorage.getItem("bestScores_hard"))
+
+function updateHighScore() {
+    hscore_easy = JSON.parse(localStorage.getItem("bestScores_easy"))
+    hscore_medium = JSON.parse(localStorage.getItem("bestScores_medium"))
+    hscore_hard = JSON.parse(localStorage.getItem("bestScores_hard"))
+
+    if (difficultyLevel === "easy") {
+        highCount.innerHTML = hscore_easy[0].hmoveCount;
+        highName.innerHTML = hscore_easy[0].hplayerName;
+        highTime.innerHTML = hscore_easy[0].htimeTaken;
+        modeSelected.innerHTML = "Easy"
+    }
+    if (difficultyLevel === "medium") {
+        highCount.innerHTML = hscore_medium[0].hmoveCount;
+        highName.innerHTML = hscore_medium[0].hplayerName;
+        highTime.innerHTML = hscore_medium[0].htimeTaken;
+        modeSelected.innerHTML = "Medium"
+    }
+    if (difficultyLevel === "hard") {
+        highCount.innerHTML = hscore_hard[0].hmoveCount;
+        highName.innerHTML = hscore_hard[0].hplayerName;
+        highTime.innerHTML = hscore_hard[0].htimeTaken;
+        modeSelected.innerHTML = "Hard"
+    }
+}
+
+updateHighScore();
+
+//sounds 
+var unmute = document.getElementById("unmute");
+var mute = document.getElementById("mute")
+unmute.addEventListener('click', () => {
+    mute.classList.remove("hide")
+    unmute.classList.add("hide")
+    tapSound.muted = true;
+    finishSound.muted = true;
+})
+mute.addEventListener('click', () => {
+    mute.classList.add("hide")
+    unmute.classList.remove("hide")
+    tapSound.muted = false;
+    tapSound.play();
+    finishSound.muted = false;
+})
+
+//dark mode
+var darkMode = document.getElementById("darkMode");
+darkMode.addEventListener('click', () => {
+    // console.log(darkMode.innerHTML)
+    if (darkMode.innerHTML == "Light Mode") {
+        document.body.style.backgroundColor = "rgb(206, 203, 203)"
+        document.body.style.color = "black"
+        darkMode.style.color = "white"
+        darkMode.style.backgroundColor = "black"
+        darkMode.innerHTML = "Dark Mode"
+    } else if (darkMode.innerHTML == "Dark Mode") {
+        document.body.style.backgroundColor = "rgb(19, 19, 19)"
+        document.body.style.color = "white"
+        darkMode.style.color = "black"
+        darkMode.style.backgroundColor = "white"
+        darkMode.innerHTML = "Light Mode"
+    }
+})
