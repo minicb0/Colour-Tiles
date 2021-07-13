@@ -35,11 +35,17 @@ var p2start = document.getElementById("p2start");
 var p1input = document.getElementById("p1yourName");
 var p2input = document.getElementById("p2yourName");
 var difficulty = document.getElementById("difficulty");
-var difficultyLevel = document.getElementById("difficulty").value;
+var difficultyLevel = document.getElementById("difficulty");
 
 //sounds
 var tapSound = document.getElementById("tap");
 var finishSound = document.getElementById("finish");
+
+//highscores variable
+var highCount = document.getElementById("highCount");
+var highTime = document.getElementById("highTime");
+var highName = document.getElementById("highName");
+var modeSelected = document.getElementById("modeSelected");
 
 //pop up window
 var popup = document.getElementById("popup");
@@ -58,8 +64,45 @@ var p2timetaken;
 var p1score;
 var p2score;
 
+// scores of player won
+var finalScore = 0;
+var finalMoveCount = 0;
+var finalTimetaken = 0;
+var finalName = "";
+
 //at the start of the game player 1 will be displayed with no message
 document.getElementById("p1won").classList.remove("wonMsg");
+
+var scoreLocalMP
+//setting local storage initially
+if (localStorage.getItem("bestScores-mp") == null) {
+    scoreLocalMP = [
+        {
+            'difficulty': "Easy",
+            'hname': "N/A",
+            'hscore': 0,
+            'hmoveCount': 0,
+            'htimeTaken': 0
+        },
+        {
+            'difficulty': "Medium",
+            'hname': "N/A",
+            'hscore': 0,
+            'hmoveCount': 0,
+            'htimeTaken': 0
+        },
+        {
+            'difficulty': "Hard",
+            'hname': "N/A",
+            'hscore': 0,
+            'hmoveCount': 0,
+            'htimeTaken': 0
+        }
+    ]
+    localStorage.setItem("bestScores-mp", JSON.stringify(scoreLocalMP))
+} else {
+    scoreLocalMP = JSON.parse(localStorage.getItem("bestScores-mp"));
+}
 
 var count = 0;
 var startTime;
@@ -331,8 +374,7 @@ p2start.addEventListener('click', () => {
 
 difficulty.addEventListener('change', () => {
     gameStopInBetween();
-    difficultyLevel = document.getElementById("difficulty").value;
-    if (difficultyLevel === "easy") {
+    if (difficultyLevel.value === "Easy") {
         n = 5;
         d = 1;
         grid((n - 2), d); //4
@@ -340,7 +382,7 @@ difficulty.addEventListener('change', () => {
         gridp2t1((n - 2))
         gridp2t2(n)
     }
-    if (difficultyLevel === "medium") {
+    if (difficultyLevel.value === "Medium") {
         n = 6;
         d = 3;
         grid((n - 2), d); //7
@@ -348,7 +390,7 @@ difficulty.addEventListener('change', () => {
         gridp2t1((n - 2))
         gridp2t2(n)
     }
-    if (difficultyLevel === "hard") {
+    if (difficultyLevel.value === "Hard") {
         n = 7;
         d = 5;
         grid((n - 2), d); //10
@@ -356,6 +398,7 @@ difficulty.addEventListener('change', () => {
         gridp2t1((n - 2))
         gridp2t2(n)
     }
+    updateHighScores();
     colorArrayFunction();
 })
 
@@ -385,6 +428,8 @@ function gameStopInBetween() {
     //making the start button and input enable again
     p1start.disabled = false;
     p1input.disabled = false;
+    p2start.disabled = false;
+    p2input.disabled = false;
 
     //stoping the timer   
     clearInterval(x);
@@ -451,7 +496,7 @@ function p1timer() {
             document.getElementById("player1").classList.add("disabled")
             document.getElementById("player2").classList.remove("disabled")
             finishSound.play();
-            document.getElementById("p1won").innerHTML = "Congrats " + p1userName + "! You finished! <br> Move Count: " + count + "<br> Time taken: " + (Math.floor(timetaken / 1000) + " seconds");
+            document.getElementById("p1won").innerHTML = "Congrats " + p1userName + "! You Completed! <br> Move Count: " + count + "<br> Time taken: " + (Math.floor(timetaken / 1000)) + " seconds";
         }, 100)
     }
 }
@@ -493,7 +538,7 @@ function p2timer() {
             clearInterval(y);
             document.getElementById("p2won").classList.add("wonMsg")
             document.getElementById("player2").classList.add("disabled")
-            document.getElementById("p2won").innerHTML = "Congrats " + p2userName + "! You won! <br> Move Count: " + count + "<br> Time taken: " + (Math.floor(timetaken / 1000) + " seconds");
+            document.getElementById("p2won").innerHTML = "Congrats " + p2userName + "! You Completed! <br> Move Count: " + count + "<br> Time taken: " + (Math.floor(timetaken / 1000)) + " seconds";
 
             popup.style.display = "block";
             popupImg.src = "";
@@ -501,14 +546,50 @@ function p2timer() {
             caption.style.paddingTop = "150px";
             caption.style.textAlign = "center";
             if (p1score > p2score) {
-                caption.innerHTML = "Player 1 Won!<br><br> Congrats " + p1userName + "! You won! <br> Move Count: " + p1moveCount + "<br> Time taken: " + (Math.floor(p1timetaken / 1000) + " seconds");
+                finalScore = p1score;
+                finalMoveCount = p1moveCount;
+                finalTimetaken = (Math.floor(p1timetaken / 1000))
+                finalName = p1userName;
+                caption.innerHTML = "Player 1 Won!<br><br> Congrats " + p1userName + "! You won! <br> Move Count: " + p1moveCount + "<br> Time taken: " + (Math.floor(p1timetaken / 1000)) + " seconds";
             } else if (p2score > p1score) {
-                caption.innerHTML = "Player 2 Won!<br><br> Congrats " + p2userName + "! You won! <br> Move Count: " + p2moveCount + "<br> Time taken: " + (Math.floor(p2timetaken / 1000) + " seconds");
+                finalScore = p2score;
+                finalMoveCount = p2moveCount;
+                finalTimetaken = (Math.floor(p2timetaken / 1000))
+                finalName = p2userName;
+                caption.innerHTML = "Player 2 Won!<br><br> Congrats " + p2userName + "! You won! <br> Move Count: " + p2moveCount + "<br> Time taken: " + (Math.floor(p2timetaken / 1000)) + " seconds";
             }
             newgame.style.zIndex = "1";
+
+            // local storage
+            scoreLocalMP.forEach((element, index) => {
+                if (element.difficulty == difficultyLevel.value) {
+                    if (finalScore > scoreLocalMP[index].hscore) {
+                        scoreLocalMP[index].hname = finalName
+                        scoreLocalMP[index].hscore = finalScore
+                        scoreLocalMP[index].htimeTaken = finalTimetaken
+                        scoreLocalMP[index].hmoveCount = finalMoveCount
+                    }
+                }
+            })
+            localStorage.setItem("bestScores-mp", JSON.stringify(scoreLocalMP))
+            updateHighScores();
         }, 100)
+
+
     }
 }
+
+function updateHighScores() {
+    scoreLocalMP.forEach((element, index) => {
+        if (element.difficulty == difficultyLevel.value) {
+            highCount.innerHTML = scoreLocalMP[index].hmoveCount;
+            highName.innerHTML = scoreLocalMP[index].hname;
+            highTime.innerHTML = scoreLocalMP[index].htimeTaken;
+            modeSelected.innerHTML = scoreLocalMP[index].difficulty;
+        }
+    })
+}
+updateHighScores();
 
 //sounds 
 var unmute = document.getElementById("unmute");

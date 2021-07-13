@@ -10,13 +10,28 @@
 </head>
 
 <body>
-
-    <div id="option">
-        <div class="item">
-            <a href="./singleplayer/index.html">Single Player</a>
+    <div id="container">
+        <div id="headDiv">
+            <span class="heading">Color Tiles</span>
         </div>
-        <div class="item">
-            <a href="./multiplayer/index.html">Double Player</a>
+        <hr>
+        
+        <div id="instruction">
+            There are 3 difficulty modes: <br>
+            <ul>
+                <li>Easy Mode: Given a 5x5 grid made with tiles of 6 different colors, the goal is to try and make this 3x3 grid in its center. Out of the 25 tiles, one will be empty which can be swapped with any of the four adjacent tiles.</li>
+                <li>Medium Mode: Similar to Easy Mode 6x6 and 4x4 grids with 7 different colors.</li>
+                <li>Hard Mode: Similar to Easy Mode 7x7 and 5x5 grids with 8 different colors.</li>
+            </ul>
+            
+        </div>
+        <div id="option">
+            <button onclick="location.href='./singleplayer/index.html'">
+                Single Player
+            </button>
+            <button onclick="location.href='./multiplayer/index.html'">
+                Double Player
+            </button>
         </div>
     </div>
 

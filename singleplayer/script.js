@@ -33,7 +33,7 @@ var newgame = document.getElementById("newgame");
 var start = document.getElementById("start");
 var input = document.getElementById("yourName");
 var difficulty = document.getElementById("difficulty")
-var difficultyLevel = document.getElementById("difficulty").value;
+var difficultyLevel = document.getElementById("difficulty");
 var countdownTimer = document.querySelector("#timer")
 
 //sounds
@@ -60,36 +60,35 @@ var timetaken;
 var smallGrid_randomArray = [];
 var bigGrid_centreArray = [];
 
+var scoreLocalSP
 //setting local storage initially
-if (localStorage.getItem("bestScores_easy") === null) {
-    localStorage.setItem("bestScores_easy", JSON.stringify([
+if (localStorage.getItem("bestScores-sp") == null) {
+    scoreLocalSP = [
         {
-            "hscore": 0,
-            "hplayerName": "N/A",
-            "hmoveCount": "-",
-            "htimeTaken": "-"
-        }
-    ]));
-}
-if (localStorage.getItem("bestScores_medium") === null) {
-    localStorage.setItem("bestScores_medium", JSON.stringify([
+            'difficulty': "Easy",
+            'hname': "N/A",
+            'hscore': 0,
+            'hmoveCount': 0,
+            'htimeTaken': 0
+        },
         {
-            "hscore": 0,
-            "hplayerName": "N/A",
-            "hmoveCount": "-",
-            "htimeTaken": "-"
-        }
-    ]));
-}
-if (localStorage.getItem("bestScores_hard") === null) {
-    localStorage.setItem("bestScores_hard", JSON.stringify([
+            'difficulty': "Medium",
+            'hname': "N/A",
+            'hscore': 0,
+            'hmoveCount': 0,
+            'htimeTaken': 0
+        },
         {
-            "hscore": 0,
-            "hplayerName": "N/A",
-            "hmoveCount": "-",
-            "htimeTaken": "-"
+            'difficulty': "Hard",
+            'hname': "N/A",
+            'hscore': 0,
+            'hmoveCount': 0,
+            'htimeTaken': 0
         }
-    ]));
+    ]
+    localStorage.setItem("bestScores-sp", JSON.stringify(scoreLocalSP))
+} else {
+    scoreLocalSP = JSON.parse(localStorage.getItem("bestScores-sp"));
 }
 
 // n*n grid
@@ -224,27 +223,26 @@ start.addEventListener('click', () => {
 difficulty.addEventListener('change', () => {
     gameStopInBetween();
     //make the new table with some different generated color
-    difficultyLevel = document.getElementById("difficulty").value;
-    if (difficultyLevel === "easy") {
+    if (difficultyLevel.value === "Easy") {
         n = 5;
         d = 1;
         grid((n - 2), d); //4
         grid(n, d); //6
     }
-    if (difficultyLevel === "medium") {
+    if (difficultyLevel.value === "Medium") {
         n = 6;
         d = 3;
         grid((n - 2), d); //7
         grid(n, d); //9
     }
-    if (difficultyLevel === "hard") {
+    if (difficultyLevel.value === "Hard") {
         n = 7;
         d = 5;
         grid((n - 2), d); //10
         grid(n, d); //12
     }
     //updating high score for the selected option
-    updateHighScore();
+    updateHighScores();
     colorArrayFunction();
 })
 
@@ -315,44 +313,6 @@ function myTimer() {
         //score is only factor to decide the highscore and it is based on move count, less the move count - more the score - good highscore
         score = 1 / (count)
 
-        if (difficultyLevel === "easy") {
-            if (hscore_easy[0].hscore < score) {
-                localStorage.setItem("bestScores_easy", JSON.stringify([
-                    {
-                        "hscore": score,
-                        "hplayerName": userName,
-                        "hmoveCount": count,
-                        "htimeTaken": Math.floor(timetaken / 1000)
-                    }
-                ]));
-            }
-        }
-        if (difficultyLevel === "medium") {
-            if (hscore_medium[0].hscore < score) {
-                localStorage.setItem("bestScores_medium", JSON.stringify([
-                    {
-                        "hscore": score,
-                        "hplayerName": userName,
-                        "hmoveCount": count,
-                        "htimeTaken": Math.floor(timetaken / 1000)
-                    }
-                ]));
-            }
-        }
-        if (difficultyLevel === "hard") {
-            if (hscore_hard[0].hscore < score) {
-                localStorage.setItem("bestScores_easy", JSON.stringify([
-                    {
-                        "hscore": score,
-                        "hplayerName": userName,
-                        "hmoveCount": count,
-                        "htimeTaken": Math.floor(timetaken / 1000)
-                    }
-                ]));
-            }
-        }
-        updateHighScore();
-
         setTimeout(() => {
             finishSound.play();
             // console.log("won");
@@ -362,43 +322,39 @@ function myTimer() {
             close.classList.add("hide");
             caption.style.paddingTop = "150px";
             caption.style.textAlign = "center";
-            caption.innerHTML = "Congrats " + userName + "! You won! <br> Move Count: " + count + "<br> Time taken: " + (Math.floor(timetaken / 1000) + " seconds");
+            caption.innerHTML = "Congrats " + userName + "! You won! <br> Move Count: " + count + "<br> Time taken: " + (Math.floor(timetaken / 1000)) + " seconds";
             newgame.style.zIndex = "1";
+
+            // local storage
+            scoreLocalSP.forEach((element, index) => {
+                if (element.difficulty == difficultyLevel.value) {
+                    if (score > scoreLocalSP[index].hscore) {
+                        scoreLocalSP[index].hname = userName
+                        scoreLocalSP[index].hscore = score
+                        scoreLocalSP[index].htimeTaken = (Math.floor(timetaken / 1000))
+                        scoreLocalSP[index].hmoveCount = count
+                    }
+                }
+            })
+            localStorage.setItem("bestScores-sp", JSON.stringify(scoreLocalSP))
+            updateHighScores();
         }, 100)
     }
 }
 
 //local storage
-var hscore_easy = JSON.parse(localStorage.getItem("bestScores_easy"))
-var hscore_medium = JSON.parse(localStorage.getItem("bestScores_medium"))
-var hscore_hard = JSON.parse(localStorage.getItem("bestScores_hard"))
-
-function updateHighScore() {
-    hscore_easy = JSON.parse(localStorage.getItem("bestScores_easy"))
-    hscore_medium = JSON.parse(localStorage.getItem("bestScores_medium"))
-    hscore_hard = JSON.parse(localStorage.getItem("bestScores_hard"))
-
-    if (difficultyLevel === "easy") {
-        highCount.innerHTML = hscore_easy[0].hmoveCount;
-        highName.innerHTML = hscore_easy[0].hplayerName;
-        highTime.innerHTML = hscore_easy[0].htimeTaken;
-        modeSelected.innerHTML = "Easy"
-    }
-    if (difficultyLevel === "medium") {
-        highCount.innerHTML = hscore_medium[0].hmoveCount;
-        highName.innerHTML = hscore_medium[0].hplayerName;
-        highTime.innerHTML = hscore_medium[0].htimeTaken;
-        modeSelected.innerHTML = "Medium"
-    }
-    if (difficultyLevel === "hard") {
-        highCount.innerHTML = hscore_hard[0].hmoveCount;
-        highName.innerHTML = hscore_hard[0].hplayerName;
-        highTime.innerHTML = hscore_hard[0].htimeTaken;
-        modeSelected.innerHTML = "Hard"
-    }
+function updateHighScores() {
+    scoreLocalSP.forEach((element, index) => {
+        if (element.difficulty == difficultyLevel.value) {
+            highCount.innerHTML = scoreLocalSP[index].hmoveCount;
+            highName.innerHTML = scoreLocalSP[index].hname;
+            highTime.innerHTML = scoreLocalSP[index].htimeTaken;
+            modeSelected.innerHTML = scoreLocalSP[index].difficulty;
+        }
+    })
 }
 
-updateHighScore();
+updateHighScores();
 
 //sounds 
 var unmute = document.getElementById("unmute");
